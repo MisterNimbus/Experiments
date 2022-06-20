@@ -1,0 +1,364 @@
+<!-- Created by Nimbus on 17.03.2022 -->
+<!-- Inspired by/recreating Coding Challenge #139 by The Coding Train -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div style="display: flex; justify-content: space-between">
+      <div>
+        <h2>Approximating Pi with colliding blocks</h2>
+        <span>Frame Count: </span><span id="frameCount"></span>
+        <br />
+        <span>Mass Ratio: </span><span id="massRatio"></span>
+        <br />
+        <span>Total Collision Count: </span><span id="CollisionsTotal"></span>
+        <br />
+        <span>Block Collision Count: </span><span id="CollisionsBlocks"></span>
+        <br />
+        <span>Wall Collision Count: </span><span id="CollisionsWall"></span>
+        <br />
+        <span>Pi: </span><span id="Pi"></span>
+        <br />
+      </div>
+
+      <div style="display: flex; justify-content: space-evenly">
+        <button
+          style="
+            margin-right: 10px;
+            margin-top: 80px;
+            margin-bottom: 3px;
+            padding-left: 50px;
+            padding-right: 50px;
+            font-size: 50px;
+          "
+          id="startStop"
+        >
+          <b>Start</b>
+        </button>
+        <div style="padding-right: 40px">
+          <br /><br />
+          <h4 style="margin-bottom: 4px">Mass Ratio</h4>
+          <input type="radio" id="1" name="massRatio" value="0" checked />
+          <label for="1">1:1</label><br />
+
+          <input type="radio" id="100" name="massRatio" value="1" />
+          <label for="100">1:100</label><br />
+
+          <input type="radio" id="10000" name="massRatio" value="2" />
+          <label for="10000">1:10000</label><br />
+
+          <input type="radio" id="1000000" name="massRatio" value="3" />
+          <label for="1000000">1:1000000</label><br />
+
+          <input type="radio" id="100000000" name="massRatio" value="4" />
+          <label for="100000000">1:100000000</label><br />
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: center">
+      <canvas
+        id="collisionCanvas"
+        width="1200"
+        height="650"
+        style="border: 1px solid #000000"
+      >
+      </canvas>
+    </div>
+
+    <script>
+      class Block {
+        constructor(
+          name,
+          posXLeft,
+          posYTop,
+          width,
+          mass,
+          speedX,
+          color,
+          canvasId
+        ) {
+          this.name = name;
+          this.posXLeft = posXLeft;
+          this.posYTop = posYTop;
+          this.width = width; // height will be equal to width.
+          this.speedX = speedX; // right is (+), left is (-).
+          this.mass = mass;
+          this.color = color;
+          this.ctx = document.getElementById(canvasId).getContext("2d");
+        }
+        draw() {
+          this.ctx.fillStyle = this.color;
+          this.ctx.fillRect(
+            this.posXLeft,
+            this.posYTop,
+            this.width,
+            this.width
+          );
+        }
+        update(tDelta) {
+          this.posXLeft = this.posXLeft + tDelta * this.speedX;
+        }
+        leftSideCollision(block) {
+          let distBetweenBlocks =
+            this.posXLeft - (block.posXLeft + block.width);
+          if (distBetweenBlocks < 0) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        leftSideCollisionWithWall() {
+          let distToWall = this.posXLeft;
+          if (distToWall <= 0) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        collide(block) {
+          let speedXThisAfterCollision =
+            (this.mass * this.speedX -
+              block.mass * this.speedX +
+              2 * block.mass * block.speedX) /
+            (this.mass + block.mass);
+          let speedXBlockAfterCollision =
+            this.speedX - block.speedX + speedXThisAfterCollision;
+
+          this.speedX = speedXThisAfterCollision;
+          block.speedX = speedXBlockAfterCollision;
+
+          block.posXLeft = this.posXLeft - block.width;
+          // Play collision sound
+        }
+        collideWithWall() {
+          this.speedX = this.speedX * -1;
+          this.posXLeft = 0;
+        }
+      }
+
+      class Simulation {
+        constructor(tDelta, canvasId, canvasHeight, canvasWidth, resultsIds) {
+          this.tDelta = tDelta;
+          this.canvasId = canvasId;
+          this.canvasHeight = canvasHeight;
+          this.canvasWidth = canvasWidth;
+          this.resultsIds = resultsIds;
+          this.blocks = [];
+          this.frameCount = 0;
+          this.collisionCount = 0;
+          this.blockCollisionCount = 0;
+          this.wallCollisionCount = 0;
+        }
+        addBlock(name, posXLeft, width, mass, speedX, color) {
+          let block = new Block(
+            name,
+            posXLeft,
+            this.canvasHeight - width,
+            width,
+            mass,
+            speedX,
+            color,
+            this.canvasId
+          );
+          this.blocks.push(block);
+          console.log("block created: " + block.name);
+        }
+        updateCanvas() {
+          document
+            .getElementById(this.canvasId)
+            .getContext("2d")
+            .clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+          for (let x in this.blocks) {
+            this.blocks[x].draw();
+          }
+        }
+        updateBlocks() {
+          for (let x in this.blocks) {
+            this.blocks[x].update(this.tDelta);
+          }
+          for (let x in this.blocks) {
+            if (this.blocks[x].leftSideCollisionWithWall()) {
+              this.blocks[x].collideWithWall();
+              this.collisionCount = this.collisionCount + 1;
+              this.wallCollisionCount = this.wallCollisionCount + 1;
+              console.log("Collision with wall");
+            }
+          }
+          for (let x in this.blocks) {
+            if (x - 1 >= 0) {
+              if (this.blocks[x].leftSideCollision(this.blocks[x - 1])) {
+                this.blocks[x].collide(this.blocks[x - 1]);
+                console.log(
+                  "Collision between blocks " +
+                    this.blocks[x].name +
+                    " and " +
+                    this.blocks[x - 1].name
+                );
+                this.collisionCount = this.collisionCount + 1;
+                this.blockCollisionCount = this.blockCollisionCount + 1;
+              }
+            }
+          }
+        }
+        resetSim() {
+          this.blocks = [];
+          this.frameCount = 0;
+          this.collisionCount = 0;
+          this.blockCollisionCount = 0;
+          this.wallCollisionCount = 0;
+        }
+        setResults() {
+          document.getElementById(this.resultsIds[0]).innerHTML = "0";
+          document.getElementById(this.resultsIds[1]).innerHTML =
+            " " +
+            this.blocks[0].mass +
+            " (RED) : " +
+            this.blocks[1].mass +
+            " (BLUE)";
+          document.getElementById(this.resultsIds[2]).innerHTML = "0";
+          document.getElementById(this.resultsIds[3]).innerHTML = "0";
+          document.getElementById(this.resultsIds[4]).innerHTML = "0";
+          document.getElementById(this.resultsIds[5]).innerHTML = Math.PI;
+        }
+        updateResults() {
+          document.getElementById(this.resultsIds[0]).innerHTML =
+            this.frameCount;
+          document.getElementById(this.resultsIds[2]).innerHTML =
+            this.collisionCount;
+          document.getElementById(this.resultsIds[3]).innerHTML =
+            this.blockCollisionCount;
+          document.getElementById(this.resultsIds[4]).innerHTML =
+            this.wallCollisionCount;
+        }
+        simulate() {
+          this.updateBlocks();
+          this.updateCanvas();
+          this.frameCount = this.frameCount + 1;
+          this.updateResults();
+        }
+      }
+      document
+        .getElementById("startStop")
+        .addEventListener("click", startStopBtn);
+
+      let stop = true;
+
+      function startStopBtn() {
+        if (stop == true) {
+          stop = false;
+          document.getElementById("startStop").innerHTML = "Stop";
+        } else {
+          stop = true;
+          document.getElementById("startStop").innerHTML = "Start";
+        }
+      }
+
+      let sims = [];
+      let ratioChoice = 0;
+
+      // ratioChoice:
+      //0   1:1         -> 3
+      //1   1:100       -> 31
+      //2   1:10000     -> 314
+      //3   1:1000000   -> 3141
+      //4   1:100000000 -> 31415
+
+      function resetSims() {
+        sims = [];
+        let sim1 = new Simulation(0.1, "collisionCanvas", 650, 1200, [
+          "frameCount",
+          "massRatio",
+          "CollisionsTotal",
+          "CollisionsBlocks",
+          "CollisionsWall",
+          "Pi",
+        ]);
+        sim1.addBlock("red", 100, 200, 1, 0, "red");
+        sim1.addBlock("blue", 650, 200, 1, -10, "blue");
+        sims.push(sim1);
+
+        let sim2 = new Simulation(0.1, "collisionCanvas", 650, 1200, [
+          "frameCount",
+          "massRatio",
+          "CollisionsTotal",
+          "CollisionsBlocks",
+          "CollisionsWall",
+          "Pi",
+        ]);
+        sim2.addBlock("red", 100, 200, 1, 0, "red");
+        sim2.addBlock("blue", 650, 400, 100, -10, "blue");
+        sims.push(sim2);
+
+        let sim3 = new Simulation(0.1, "collisionCanvas", 650, 1200, [
+          "frameCount",
+          "massRatio",
+          "CollisionsTotal",
+          "CollisionsBlocks",
+          "CollisionsWall",
+          "Pi",
+        ]);
+        sim3.addBlock("red", 100, 300, 1, 0, "red");
+        sim3.addBlock("blue", 620, 500, 10000, -5, "blue");
+        sims.push(sim3);
+
+        let sim4 = new Simulation(0.1, "collisionCanvas", 650, 1200, [
+          "frameCount",
+          "massRatio",
+          "CollisionsTotal",
+          "CollisionsBlocks",
+          "CollisionsWall",
+          "Pi",
+        ]);
+        sim4.addBlock("red", 10, 500, 1, 0, "red");
+        sim4.addBlock("blue", 620, 600, 1000000, -1, "blue");
+        sims.push(sim4);
+
+        let sim5 = new Simulation(0.1, "collisionCanvas", 650, 1200, [
+          "frameCount",
+          "massRatio",
+          "CollisionsTotal",
+          "CollisionsBlocks",
+          "CollisionsWall",
+          "Pi",
+        ]);
+        sim5.addBlock("red", 10, 550, 1, 0, "red");
+        sim5.addBlock("blue", 620, 700, 100000000, -1, "blue");
+        sims.push(sim5);
+      }
+
+      setInterval(function () {
+        if (!stop) {
+          sims[ratioChoice].simulate();
+        }
+      }, 10);
+
+      resetSims();
+      sims[ratioChoice].setResults();
+      sims[ratioChoice].updateCanvas();
+      const radioButtons = document.querySelectorAll('input[name="massRatio"]');
+
+      for (const radioButton of radioButtons) {
+        radioButton.addEventListener("change", newMassRatio);
+      }
+
+      function newMassRatio() {
+        if (this.checked) {
+          stop = true;
+          console.log("new Ratio");
+          ratioChoice = this.value;
+          resetSims();
+          sims[ratioChoice].setResults();
+          sims[ratioChoice].updateCanvas();
+          sims[ratioChoice].updateResults();
+          document.getElementById("startStop").innerHTML = "Start";
+        }
+      }
+    </script>
+  </body>
+</html>

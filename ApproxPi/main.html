@@ -1,0 +1,92 @@
+<!-- Written by Nimbus on 14.03.2022 -->
+<!-- Inspired/Recreating Coding Challenge #95 by The Coding Train -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApproxPi</title>
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <header>
+      <h2>Approximating Pi</h2>
+    </header>
+    <main>
+      <span>points Count: </span><span id="pointsCount"></span>
+      <br>
+      <span>points Inside: </span><span id="pointsInside"></span>
+      <br>
+      <span>Pi Approximation: </span><span id="piApprox"></span>
+      <br>
+      <span>Deviation from pi: </span><span id="piDeviation"></span>
+      <br>
+      <span>Deviation from pi percentage: </span><span id="piDeviationPercent"></span><span>%</span>
+      <br>
+        <canvas
+        id="myCanvas"
+        width="400"
+        height="400"
+        style="border: 1px solid #000000"
+      ></canvas>
+      <script>
+
+        var ptsCount = 0;
+        var ptsInsideCircle = 0;
+        var piApprox = 0;
+
+        var diameter=400;
+
+
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        drawCircle(diameter/2,diameter/2,diameter/2, ctx, "#000000", 1);
+
+        setInterval(update,20);
+
+        function update() {
+            drawCircle(diameter/2,diameter/2,diameter/2, ctx, "#000000", 1);
+            addRandomPoint(diameter, ctx, "red", 1, 1);
+        }
+
+        function addRandomPoint(max, ctx, pointColor, pointRadius, pointWeight){
+            let x = random(max);
+            let y = random(max);
+            if( Math.sqrt(((x-(max/2))*(x-(max/2)))+((y-(max/2))*(y-(max/2)))) <= max/2){
+                ptsInsideCircle = ptsInsideCircle + 1;
+                document.getElementById("pointsInside").innerHTML = ptsInsideCircle;
+            }
+            drawCircle(Math.round(x), Math.round(y), pointRadius, ctx, pointColor, pointWeight);
+            ptsCount = ptsCount + 1;
+            document.getElementById("pointsCount").innerHTML = ptsCount;
+            //if distance from the center of the circle is less than radius of circle
+            
+            //console.log(Math.sqrt(((x-(max/2))*(x-(max/2)))+((y-(max/2))*(y-(max/2)))));
+            piApprox = ptsInsideCircle * 4 / ptsCount;
+            piDeviation = Math.abs(piApprox - Math.PI);
+            piDeviationPercent = 100*piDeviation/Math.PI;
+            document.getElementById("piApprox").innerHTML = piApprox;
+            document.getElementById("piDeviation").innerHTML = piDeviation;
+            document.getElementById("piDeviationPercent").innerHTML = piDeviationPercent;
+            return;
+        }
+        
+        function random(max){
+            return Math.random()*(max);
+        }
+
+        function drawCircle(x, y, r, ctx, color, lineWidth)
+        {
+            ctx.moveTo(x+r,y);
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+      </script>
+    </main>
+  </body>
+</html>
