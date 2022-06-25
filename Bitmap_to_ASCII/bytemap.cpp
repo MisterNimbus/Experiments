@@ -10,7 +10,7 @@ void Bytemap::load(int value, int row, int column){
 void Bytemap::print_Bytemap(){
     for(int row=0; row < row_count; row++){
         for(int column=0; column < column_count; column++){
-            std::cout << this->bytemap[row][column]<<" ";
+            std::cout << this->bytemap[row][column];
         }
         std::cout << std::endl;
     }
@@ -27,6 +27,7 @@ void Bytemap::print_Projection(){
 void Bytemap::prepare_projection(){
     for(int row=0; row < row_count; row++){
         for(int column=0; column < column_count; column++){
+            
             this->projection[row][column] = gradient[bytemap[row][column]];
         }
     }

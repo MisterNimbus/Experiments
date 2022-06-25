@@ -1,16 +1,17 @@
 #include <iostream>
 #include <math.h>
+#include <chrono>
+#include <thread>
 #include "bytemap.cpp"
 
 
 int main(){;
 
-    Bytemap * bytemap = new Bytemap("  .:-=+*#%@");
-    int input_bytemap[8][8];
+    Bytemap * bytemap = new Bytemap(" .-:=+*#%@@@@@");
     
     #define PI 3.14159265
-    int row_size=50;
-    int column_size=200;
+    int row_size=70;
+    int column_size=270;
     int offset = 0;
     bool inc = true;
     
@@ -100,7 +101,6 @@ bytemap->prepare_projection();
         }
     }
 
-
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
@@ -108,5 +108,27 @@ bytemap->prepare_projection();
     bytemap->prepare_projection();
     bytemap->print_Projection();
 
+    for(int frame = 0; frame < 50; frame++){
+        for(int row=0; row < row_size; row++){
+            for(int column=0; column < column_size; column++){
+                
+                float distance_to_origin = sqrt((row-(row_size/2))*(row-(row_size/2))+(column-(column_size/2))*(column-(column_size/2)));
+                float primary = 5*sin(2*PI*((0.05*distance_to_origin)-(frame*.05)))*pow(2,-0.008*distance_to_origin);
+                float secondary = (5*sin(2*PI*(0.12*distance_to_origin)));
+                float offset = 5;
+                float drop1=(( primary + offset))*pow(2,-0.016*distance_to_origin);
+
+                float distance_to_origin2 = sqrt((row-(row_size/5))*(row-(row_size/5))+(column-(column_size/6))*(column-(column_size/6)));
+                float primary2 = 2*sin(2*PI*((0.1*distance_to_origin2)-(frame*.05)));
+                float offset2 = 2;
+                float drop2=(( primary2 + offset2))*pow(2,-0.016*distance_to_origin2);
+
+                bytemap->load( (int)((drop1)), row, column);
+            }
+        }
+        bytemap->prepare_projection();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        bytemap->print_Projection();
+    }
     return 0;
 }
