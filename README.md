@@ -10,6 +10,8 @@ Have Fun!
 ---
 ## Experiments List
 
-- **ApproxPi:** *Approximating Pi using the Monte Carlo Method.* (HTML-JavaScript)
+- **ApproxPi:** *Approximating Pi using the Monte Carlo Method.* (HTML-JavaScript) - **14.03.2022**  
 
-- **Pi with Blocks:** *Number of elastic collisions giving digits of Pi.*  (HTML-JavaScript)
+- **Pi with Blocks:** *Number of elastic collisions giving digits of Pi.*  (HTML-JavaScript) - **17.03.2022**  
+
+- **Bitmap_to_ASCII:** *2-dimensional integer arrays visualized through ASCII characters.* (C++) - **25.06.2022**  
