@@ -15,3 +15,5 @@ Have Fun!
 - **Pi with Blocks:** *Number of elastic collisions giving digits of Pi.*  (HTML-JavaScript) - **17.03.2022**  
 
 - **Bitmap_to_ASCII:** *2-dimensional integer arrays visualized through ASCII characters.* (C++) - **25.06.2022**  
+
+- **Console Buffer Experiment:** *Trying Console Buffers to achieve high frame rates and colorful frames.* (C++) - **02.07.2022**
