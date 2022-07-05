@@ -146,7 +146,23 @@
                                     }
                                 }
                             </script>
-                            <div style="background-image: url(/Experiments/ConsoleBufferExperiment/EPILEPSY_WARNING.png); width:600px; height: 100%;  display: flex; justify-content:center; margin-top: 1em;">
+                            <style>
+                                #warning{
+                                    width:600px; 
+                                    height: 100%;  
+                                    display: flex; 
+                                    justify-content:center; 
+                                    margin-top: 1em;
+                                }
+                                @media(max-width: 600px)
+                                {
+                                    #warning{
+                                    width: 100%; 
+                                    background-size: cover;
+                                    }
+                                }
+                            </style>
+                            <div id="warning" style="background-image: url(/Experiments/ConsoleBufferExperiment/EPILEPSY_WARNING.png);">
                                 <img id="strobe" style="visibility:hidden;" src="/Experiments/ConsoleBufferExperiment/strobe_(epilepsy-warning).gif" alt="Strobe">
                             </div>
                         </div>
