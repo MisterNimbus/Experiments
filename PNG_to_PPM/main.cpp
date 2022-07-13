@@ -125,13 +125,6 @@ void PNMtoPixelMap(bool userInput, string * pnmName, PNM * pnm){
     pnmFile.close();
 }
 
-string removeCarriageReturn(string src){
-    string buffer;
-    buffer = src;
-    buffer.erase(buffer.size() -2 , 1);
-    return buffer;
-}
-
 int PixelMaptoPNM(bool userInput, PNM pnm, string * pnmName){
 
     if(userInput){
@@ -212,6 +205,18 @@ int successFailed(int call){
     }
 }
 
+int greyscale(PNM * pnm){
+    for(int y = 0; y < pnm->height; y++)
+        for(int x = 0; x < pnm->width; x++){
+            int greyTone = (pnm->pixelMap[y][x].R + pnm->pixelMap[y][x].G + pnm->pixelMap[y][x].B) / 3;
+            pnm->pixelMap[y][x].R = greyTone;
+            pnm->pixelMap[y][x].G = greyTone;
+            pnm->pixelMap[y][x].B = greyTone;
+        }
+    return 0;
+}
+
+
 int main(){
     system("cls");
     string pngName = "input1.png";
@@ -223,16 +228,14 @@ int main(){
     PNMtoPixelMap(false, &pnmName, &pnm);
     printPNM(pnm);
 
+    greyscale(&pnm);
+
     pnmName="output1.pmm";
     PixelMaptoPNM(false, pnm, &pnmName);
     
     string pngOutput = "output1.png";
     successFailed(PNMtoPNG(false, &pnmName, &pngOutput));
     
-
-
-
-
     pngName = "input2.png";
     pnmName = "input2.ppm";
 
@@ -240,6 +243,10 @@ int main(){
     
     PNM pnm2;
     PNMtoPixelMap(false, &pnmName, &pnm2);
+    printPNM(pnm2);
+    
+    greyscale(&pnm2);
+
     printPNM(pnm2);
 
     pnmName="output2.pmm";
