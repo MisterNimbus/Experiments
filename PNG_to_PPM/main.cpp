@@ -125,10 +125,10 @@ void PNMtoPixelMap(bool userInput, string * pnmName, PNM * pnm){
     pnmFile.close();
 }
 
-string removeEndOfString(string src){
+string removeCarriageReturn(string src){
     string buffer;
     buffer = src;
-    buffer.resize(buffer.size() -1);
+    buffer.erase(buffer.size() -2 , 1);
     return buffer;
 }
 
@@ -141,13 +141,14 @@ int PixelMaptoPNM(bool userInput, PNM pnm, string * pnmName){
     }
     
     string content = pnm.pnmMagicNumber;
-    content += uint8_t(10);
+    content += ' ';
     content += to_string(pnm.width) + ' ' + to_string(pnm.height);
-    content += uint8_t(10); 
+    content += ' ';
     if( pnm.pnmMagicNumber != "P4"){
         content += to_string(pnm.range);
-        content += uint8_t(10);
+        content += ' ';
     }
+    
     for(int y = 0; y < pnm.pixelMap.size(); y++){
         for(int x = 0; x < pnm.pixelMap[y].size(); x++){
             content += uint8_t(pnm.pixelMap[y][x].R);
@@ -214,7 +215,7 @@ int successFailed(int call){
 int main(){
     system("cls");
     string pngName = "input1.png";
-    string pnmName = "input.ppm";
+    string pnmName = "input1.ppm";
 
     successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
 
