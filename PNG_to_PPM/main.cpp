@@ -265,7 +265,7 @@ void grayscaleLuminosity(PNM * pnm){
 
 int main(){
     system("cls");
-    string pngName = "Lenna.png";
+    string pngName = "al.png";
     string pnmName = "converted.ppm";
 
     successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
