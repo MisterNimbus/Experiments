@@ -132,7 +132,8 @@ int PixelMaptoPNM(bool userInput, PNM pnm, string * pnmName){
         cin >> *pnmName;
         cout << endl;
     }
-    
+    ofstream target;
+    target.open(* pnmName, ios::out);
     string content = pnm.pnmMagicNumber;
     content += ' ';
     content += to_string(pnm.width) + ' ' + to_string(pnm.height);
@@ -141,24 +142,33 @@ int PixelMaptoPNM(bool userInput, PNM pnm, string * pnmName){
         content += to_string(pnm.range);
         content += ' ';
     }
-    
+    target << content;
+    string buffer;
     for(int y = 0; y < pnm.pixelMap.size(); y++){
         for(int x = 0; x < pnm.pixelMap[y].size(); x++){
-            content += uint8_t(pnm.pixelMap[y][x].R);
-            content += uint8_t(pnm.pixelMap[y][x].G);
-            content += uint8_t(pnm.pixelMap[y][x].B);
+            //buffer += uint8_t(pnm.pixelMap[y][x].R);
+            //buffer += uint8_t(pnm.pixelMap[y][x].G);
+            //buffer += uint8_t(pnm.pixelMap[y][x].B);
+            buffer += (pnm.pixelMap[y][x].R);
+            buffer += (pnm.pixelMap[y][x].G);
+            buffer += (pnm.pixelMap[y][x].B);
+            if(sizeof(buffer) > 60){
+                //buffer += '\n';
+                target << buffer <<char(0x0A)<<  endl;
+                buffer = "";
+            }
         }
+            
     }
+    target << buffer << endl;
+    /*
     for(int i=0; i < content.size(); i++){
         if(content[i]=='\r'){
             cout << "===================";
             content.erase(content[i]);
         }
-    }
+    }*/
     //content.erase( remove(content.begin(), content.end(), '\r'), content.end() );
-    ofstream target;
-    target.open(* pnmName, ios::out);
-    target << content;
     target.close();
     if(target.fail()){return 1;}
     return 0;
@@ -205,7 +215,7 @@ int successFailed(int call){
     }
 }
 
-int greyscale(PNM * pnm){
+int grayscaleAverage(PNM * pnm){
     for(int y = 0; y < pnm->height; y++)
         for(int x = 0; x < pnm->width; x++){
             int greyTone = (pnm->pixelMap[y][x].R + pnm->pixelMap[y][x].G + pnm->pixelMap[y][x].B) / 3;
@@ -216,45 +226,46 @@ int greyscale(PNM * pnm){
     return 0;
 }
 
+int turnToASCII(PNM * pnm){
+    for(int y = 0; y < pnm->height; y++)
+        for(int x = 0; x < pnm->width; x++){
+            int greyTone = (pnm->pixelMap[y][x].R + pnm->pixelMap[y][x].G + pnm->pixelMap[y][x].B) / 3;
+            pnm->pixelMap[y][x].R = greyTone;
+            pnm->pixelMap[y][x].G = greyTone;
+            pnm->pixelMap[y][x].B = greyTone;
+        }{}
+    return 0;
+}
+
+int grayscaleLuminosity(PNM * pnm){
+    for(int y = 0; y < pnm->height; y++)
+        for(int x = 0; x < pnm->width; x++){
+            int greyTone = pnm->pixelMap[y][x].R * 0.21 + pnm->pixelMap[y][x].G *0.72 + pnm->pixelMap[y][x].B * 0.07;
+            pnm->pixelMap[y][x].R = greyTone;
+            pnm->pixelMap[y][x].G = greyTone;
+            pnm->pixelMap[y][x].B = greyTone;
+        }
+    return 0;
+}
 
 int main(){
     system("cls");
-    string pngName = "input1.png";
-    string pnmName = "input1.ppm";
+    string pngName = "LennaPaint.png";
+    string pnmName = "converted.ppm";
 
     successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
 
     PNM pnm;
     PNMtoPixelMap(false, &pnmName, &pnm);
-    printPNM(pnm);
 
-    greyscale(&pnm);
+    //grayscaleLuminosity(&pnm);
 
-    pnmName="output1.pmm";
+    pnmName="output.pmm";
     PixelMaptoPNM(false, pnm, &pnmName);
     
-    string pngOutput = "output1.png";
+    string pngOutput = "output.png";
     successFailed(PNMtoPNG(false, &pnmName, &pngOutput));
-    
-    pngName = "input2.png";
-    pnmName = "input2.ppm";
 
-    successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
-    
-    PNM pnm2;
-    PNMtoPixelMap(false, &pnmName, &pnm2);
-    printPNM(pnm2);
-    
-    greyscale(&pnm2);
-
-    printPNM(pnm2);
-
-    pnmName="output2.pmm";
-    PixelMaptoPNM(false, pnm2, &pnmName);
-    
-    pngOutput = "output2.png";
-    successFailed(PNMtoPNG(false, &pnmName, &pngOutput));
-    
     //system("pause");
     return 0;
 }
