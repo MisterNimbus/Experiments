@@ -101,7 +101,7 @@ void PNMtoPixelMap(bool userInput, string * pnmName, PNM * pnm){
     for(int y=0; y < pnm->height; y++)
         {
         for(int x=0; x < pnm->width; x++){
-            do{
+            /*do{
             pnmFile >> Red;
             }while((int)Red == 10);
             pixelBuffer.R = (int)Red;
@@ -114,6 +114,21 @@ void PNMtoPixelMap(bool userInput, string * pnmName, PNM * pnm){
             do{
             pnmFile >> Blue;
             }while((int)Blue == 10);
+            pixelBuffer.B = (int)Blue;
+            */
+            do{
+            pnmFile >> Red;
+            }while(false);
+            pixelBuffer.R = (int)Red;
+
+            do{
+            pnmFile >> Green;
+            }while(false);
+            pixelBuffer.G = (int) Green;
+
+            do{
+            pnmFile >> Blue;
+            }while(false);
             pixelBuffer.B = (int)Blue;
 
             pixelRow.push_back(pixelBuffer);
@@ -226,18 +241,19 @@ int grayscaleAverage(PNM * pnm){
     return 0;
 }
 
-int turnToASCII(PNM * pnm){
-    for(int y = 0; y < pnm->height; y++)
+void turnToASCII(PNM * pnm, string * txt, string gradient){
+    ofstream target;
+    target.open(*txt, ios::out);
+    for(int y = 0; y < pnm->height; y++){
         for(int x = 0; x < pnm->width; x++){
-            int greyTone = (pnm->pixelMap[y][x].R + pnm->pixelMap[y][x].G + pnm->pixelMap[y][x].B) / 3;
-            pnm->pixelMap[y][x].R = greyTone;
-            pnm->pixelMap[y][x].G = greyTone;
-            pnm->pixelMap[y][x].B = greyTone;
-        }{}
-    return 0;
+            int tone = gradient.size() * pnm->pixelMap[y][x].R / pnm->range;
+            target << gradient[tone];
+        }
+        target << endl;
+    }
 }
 
-int grayscaleLuminosity(PNM * pnm){
+void grayscaleLuminosity(PNM * pnm){
     for(int y = 0; y < pnm->height; y++)
         for(int x = 0; x < pnm->width; x++){
             int greyTone = pnm->pixelMap[y][x].R * 0.21 + pnm->pixelMap[y][x].G *0.72 + pnm->pixelMap[y][x].B * 0.07;
@@ -245,12 +261,11 @@ int grayscaleLuminosity(PNM * pnm){
             pnm->pixelMap[y][x].G = greyTone;
             pnm->pixelMap[y][x].B = greyTone;
         }
-    return 0;
 }
 
 int main(){
     system("cls");
-    string pngName = "LennaPaint.png";
+    string pngName = "Lenna.png";
     string pnmName = "converted.ppm";
 
     successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
@@ -258,7 +273,11 @@ int main(){
     PNM pnm;
     PNMtoPixelMap(false, &pnmName, &pnm);
 
-    //grayscaleLuminosity(&pnm);
+    grayscaleLuminosity(&pnm);
+
+    string txt = "ascii.txt";
+    turnToASCII(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
+    
 
     pnmName="output.pmm";
     PixelMaptoPNM(false, pnm, &pnmName);
