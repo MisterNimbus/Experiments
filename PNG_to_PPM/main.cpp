@@ -174,7 +174,7 @@ if(userInput){
         cin >> *pngName;
         cout << endl;
     }
-    string command = "pnmtopng " + *pnmName + ">" + *pngName;
+    string command = "netpbm_bin\\.\\pnmtopng " + *pnmName + ">" + *pngName;
     return system(command.c_str());
 }
 
@@ -188,9 +188,11 @@ int convertPNGtoPNM(bool userInputPngName,bool userInputPnmName, string * pngNam
         cin >> *pnmName;
         cout << endl;
     }
-    string command = "pngtopnm " + *pngName + ">" + *pnmName;
+    string command = "netpbm_bin\\.\\pngtopnm " + *pngName + ">" + *pnmName;
+    //string command2 = *pngName + ">" + *pnmName;
     cout << command;
     return system(command.c_str());
+    //return system(command2.c_str());
 }
 
 // insert an int function as the call parameter.
@@ -214,6 +216,7 @@ int grayscaleAverage(PNM * pnm){
     for(int y = 0; y < pnm->height; y++)
         for(int x = 0; x < pnm->width; x++){
             int greyTone = (pnm->pixelMap[y][x].R + pnm->pixelMap[y][x].G + pnm->pixelMap[y][x].B) / 3;
+            if(greyTone==10)greyTone=11;
             pnm->pixelMap[y][x].R = greyTone;
             pnm->pixelMap[y][x].G = greyTone;
             pnm->pixelMap[y][x].B = greyTone;
@@ -282,6 +285,7 @@ void grayscaleLuminosity(PNM * pnm){
     for(int y = 0; y < pnm->height; y++)
         for(int x = 0; x < pnm->width; x++){
             int greyTone = pnm->pixelMap[y][x].R * 0.21 + pnm->pixelMap[y][x].G *0.72 + pnm->pixelMap[y][x].B * 0.07;
+            if(greyTone==10)greyTone=11;
             pnm->pixelMap[y][x].R = greyTone;
             pnm->pixelMap[y][x].G = greyTone;
             pnm->pixelMap[y][x].B = greyTone;
@@ -299,7 +303,22 @@ int main(){
     PNM pnm;
     PNMtoPixelMap(false, &pnmName, &pnm);
 
-    grayscaleLuminosity(&pnm);
+    string choice = "";
+    system("cls");
+    do{
+    cout << "Which grayscale model would you like to use? \n\n     0: No grayScale\n     1: grayscaleAverage\n     2: grayscaleLuminosity\n\n  Your choice: ";
+    cin >> choice;
+    cout <<endl<< "\"" << choice << "\"";
+    }while( choice != "1" && choice!="2"&& choice!="0");
+
+    if(choice=="1"){
+        cout<< endl<< endl << "Average model"<< endl;
+        grayscaleAverage(&pnm);
+    }
+    if(choice=="2"){
+        cout<< endl << endl << "Luminosity model"<< endl;
+        grayscaleLuminosity(&pnm);
+    }
 
     string txt = "ascii.txt";
     //turnToASCII2Height(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
@@ -312,6 +331,7 @@ int main(){
     string pngOutput = "output.png";
     successFailed(PNMtoPNG(false, &pnmName, &pngOutput));
 
-    //system("pause");
+    cout << endl<< endl<< "ALL DONE!"<< endl;
+    system("pause");
     return 0;
 }
