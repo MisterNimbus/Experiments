@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -147,7 +148,7 @@ int PixelMaptoPNM(bool userInput, PNM pnm, string * pnmName){
     content += ' ';
     if( pnm.pnmMagicNumber != "P4"){
         content += to_string(pnm.range);
-        content += "";
+        //content += '\n';
     }
     string buffer = "";
     for(int y = 0; y < pnm.pixelMap.size(); y++){
@@ -177,15 +178,18 @@ if(userInput){
     return system(command.c_str());
 }
 
-int convertPNGtoPNM(bool userInput, string * pngName, string * pnmName){
-    if(userInput){
+int convertPNGtoPNM(bool userInputPngName,bool userInputPnmName, string * pngName, string * pnmName){
+    if(userInputPngName){
         cout << "Name of the PNG file (E.g: example.png): ";
         cin >> *pngName;
+    }
+    if(userInputPnmName){
         cout << "Name of the PNM file to be created (E.g: example.ppm): ";
         cin >> *pnmName;
         cout << endl;
     }
     string command = "pngtopnm " + *pngName + ">" + *pnmName;
+    cout << command;
     return system(command.c_str());
 }
 
@@ -229,6 +233,10 @@ void turnToASCII3Width(PNM * pnm, string * txt, string gradient){
     }
 }
 
+double round_half_up(float d)
+{
+    return floor(d + 0.5);
+}
 // 1 ASCII for every 3 vertical Pixel
 void turnToASCII3Height(PNM * pnm, string * txt, string gradient){
     ofstream target;
@@ -244,7 +252,26 @@ void turnToASCII3Height(PNM * pnm, string * txt, string gradient){
                 average += pnm->pixelMap[y+1][x].R;
             }  
             average = average/ 3;
-            int tone = gradient.size() * average / pnm->range;
+            int tone = round_half_up(gradient.size() * average / pnm->range);
+            target << gradient[tone];
+        }
+        target << endl;
+    }
+}
+
+// 1 ASCII for every 3 vertical Pixel
+void turnToASCII2Height(PNM * pnm, string * txt, string gradient){
+    ofstream target;
+    target.open(*txt, ios::out);
+    for(int y = 0; y < pnm->height; y+=2){
+        for(int x = 0; x < pnm->width; x++){
+            float average = pnm->pixelMap[y][x].R;
+            if (y+1 < pnm->height)
+            {
+                average += pnm->pixelMap[y+1][x].R;
+            }
+            average = average/ 2;
+            int tone = round_half_up(gradient.size() * average / pnm->range);
             target << gradient[tone];
         }
         target << endl;
@@ -263,19 +290,20 @@ void grayscaleLuminosity(PNM * pnm){
 
 int main(){
     system("cls");
-    string pngName = "beans.png";
+    string pngName = "Lenna.png";
     string pnmName = "converted.ppm";
 
-    successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
+    successFailed(convertPNGtoPNM(true, false, &pngName, &pnmName));
 
 
     PNM pnm;
     PNMtoPixelMap(false, &pnmName, &pnm);
 
-    grayscaleAverage(&pnm);
+    grayscaleLuminosity(&pnm);
 
     string txt = "ascii.txt";
-    turnToASCII3Height(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
+    //turnToASCII2Height(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
+    turnToASCII2Height(&pnm, &txt, "@%#*+=-:. ");
     
 
     pnmName="output.pmm";
