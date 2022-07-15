@@ -1,0 +1,3 @@
+pngtopnm 237
+pnmtopng 319
+ppm      539
