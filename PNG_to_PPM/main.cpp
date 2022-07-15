@@ -101,35 +101,27 @@ void PNMtoPixelMap(bool userInput, string * pnmName, PNM * pnm){
     for(int y=0; y < pnm->height; y++)
         {
         for(int x=0; x < pnm->width; x++){
-            /*do{
+            
             pnmFile >> Red;
-            }while((int)Red == 10);
+            if((int)Red == 10){
+                Red = 11;
+            }
             pixelBuffer.R = (int)Red;
 
-            do{
+            
             pnmFile >> Green;
-            }while((int)Green == 10);
+            if((int)Green == 10){
+                Green = 11;
+            }
             pixelBuffer.G = (int) Green;
 
-            do{
+            
             pnmFile >> Blue;
-            }while((int)Blue == 10);
+            if((int)Blue == 10){
+                Blue = 11;
+            }
             pixelBuffer.B = (int)Blue;
-            */
-            do{
-            pnmFile >> Red;
-            }while(false);
-            pixelBuffer.R = (int)Red;
-
-            do{
-            pnmFile >> Green;
-            }while(false);
-            pixelBuffer.G = (int) Green;
-
-            do{
-            pnmFile >> Blue;
-            }while(false);
-            pixelBuffer.B = (int)Blue;
+            
 
             pixelRow.push_back(pixelBuffer);
         }
@@ -155,35 +147,19 @@ int PixelMaptoPNM(bool userInput, PNM pnm, string * pnmName){
     content += ' ';
     if( pnm.pnmMagicNumber != "P4"){
         content += to_string(pnm.range);
-        content += ' ';
+        content += "";
     }
-    target << content;
-    string buffer;
+    string buffer = "";
     for(int y = 0; y < pnm.pixelMap.size(); y++){
         for(int x = 0; x < pnm.pixelMap[y].size(); x++){
-            //buffer += uint8_t(pnm.pixelMap[y][x].R);
-            //buffer += uint8_t(pnm.pixelMap[y][x].G);
-            //buffer += uint8_t(pnm.pixelMap[y][x].B);
-            buffer += (pnm.pixelMap[y][x].R);
-            buffer += (pnm.pixelMap[y][x].G);
-            buffer += (pnm.pixelMap[y][x].B);
-            if(sizeof(buffer) > 60){
-                //buffer += '\n';
-                target << buffer <<char(0x0A)<<  endl;
-                buffer = "";
-            }
+            buffer += uint8_t(pnm.pixelMap[y][x].R);
+            buffer += uint8_t(pnm.pixelMap[y][x].G);
+            buffer += uint8_t(pnm.pixelMap[y][x].B);
+            //buffer += 10;
         }
             
     }
-    target << buffer << endl;
-    /*
-    for(int i=0; i < content.size(); i++){
-        if(content[i]=='\r'){
-            cout << "===================";
-            content.erase(content[i]);
-        }
-    }*/
-    //content.erase( remove(content.begin(), content.end(), '\r'), content.end() );
+    target << content << buffer << endl;
     target.close();
     if(target.fail()){return 1;}
     return 0;
@@ -240,13 +216,35 @@ int grayscaleAverage(PNM * pnm){
         }
     return 0;
 }
-
-void turnToASCII(PNM * pnm, string * txt, string gradient){
+//3 horizontal ASCII for every Pixel
+void turnToASCII3Width(PNM * pnm, string * txt, string gradient){
     ofstream target;
     target.open(*txt, ios::out);
     for(int y = 0; y < pnm->height; y++){
         for(int x = 0; x < pnm->width; x++){
             int tone = gradient.size() * pnm->pixelMap[y][x].R / pnm->range;
+            target << gradient[tone]<< gradient[tone]<< gradient[tone];
+        }
+        target << endl;
+    }
+}
+
+// 1 ASCII for every 3 vertical Pixel
+void turnToASCII3Height(PNM * pnm, string * txt, string gradient){
+    ofstream target;
+    target.open(*txt, ios::out);
+    for(int y = 0; y < pnm->height; y+=3){
+        for(int x = 0; x < pnm->width; x++){
+            float average = pnm->pixelMap[y][x].R;
+            if (y+2 < pnm->height)
+            {
+                average += pnm->pixelMap[y+1][x].R;
+                average += pnm->pixelMap[y+2][x].R;
+            }else if( y+1 < pnm->height){
+                average += pnm->pixelMap[y+1][x].R;
+            }  
+            average = average/ 3;
+            int tone = gradient.size() * average / pnm->range;
             target << gradient[tone];
         }
         target << endl;
@@ -265,18 +263,19 @@ void grayscaleLuminosity(PNM * pnm){
 
 int main(){
     system("cls");
-    string pngName = "al.png";
+    string pngName = "beans.png";
     string pnmName = "converted.ppm";
 
     successFailed(convertPNGtoPNM(false, &pngName, &pnmName));
 
+
     PNM pnm;
     PNMtoPixelMap(false, &pnmName, &pnm);
 
-    grayscaleLuminosity(&pnm);
+    grayscaleAverage(&pnm);
 
     string txt = "ascii.txt";
-    turnToASCII(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
+    turnToASCII3Height(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
     
 
     pnmName="output.pmm";
