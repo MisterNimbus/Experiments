@@ -297,8 +297,13 @@ int main(){
     string pngName = "Lenna.png";
     string pnmName = "converted.ppm";
 
+    string loop = "";
+    do{
+    if(loop == ""){
     successFailed(convertPNGtoPNM(true, false, &pngName, &pnmName));
-
+    }else{
+    successFailed(convertPNGtoPNM(false, false, &pngName, &pnmName));
+    }
 
     PNM pnm;
     PNMtoPixelMap(false, &pnmName, &pnm);
@@ -319,10 +324,17 @@ int main(){
         cout<< endl << endl << "Luminosity model"<< endl;
         grayscaleLuminosity(&pnm);
     }
-
+    do{
+    cout << "Which ASCII gradient would you like to use? \n\n     0: $@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\n     1: @%#*+=-:. \n\n  Your choice: ";
+    cin >> choice;
+    cout <<endl<< "\"" << choice << "\"";
+    }while( choice != "1" && choice!="0");
+    string gradient="$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+    if(choice=="1"){
+        gradient = "@%#*+=-:. ";
+    }
     string txt = "ascii.txt";
-    //turnToASCII2Height(&pnm, &txt, "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ");
-    turnToASCII2Height(&pnm, &txt, "@%#*+=-:. ");
+    turnToASCII2Height(&pnm, &txt, gradient);
     
 
     pnmName="output.pmm";
@@ -330,8 +342,16 @@ int main(){
     
     string pngOutput = "output.png";
     successFailed(PNMtoPNG(false, &pnmName, &pngOutput));
+    do{
+    cout << "Would you like to go through once again? (y/N)\n\n  Your choice: ";
+    cin >> loop;
+    cout <<endl<< "\"" << loop << "\"";
+    }while( loop != "N" && loop!="Y" && loop != "n" && loop!="y");
+    
+    }while(loop != "N" && loop != "n");
 
     cout << endl<< endl<< "ALL DONE!"<< endl;
     system("pause");
+
     return 0;
 }
