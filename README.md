@@ -17,3 +17,5 @@ Have Fun!
 - **Bitmap_to_ASCII:** *2-dimensional integer arrays visualized through ASCII characters.* (C++) - **25.06.2022**  
 
 - **Console Buffer Experiment:** *Trying Console Buffers to achieve high frame rates and colorful frames.* (C++) - **02.07.2022**
+
+- **PNG_to_PPM:** *Getting familiar with pnm formats and image manipulation.* (C++) - **17.07.2022**
