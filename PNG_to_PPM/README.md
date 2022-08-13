@@ -7,7 +7,7 @@ After this experiment I have written Image_Manipulator, which a much better stru
 ## This Program Can:
  -  Turn PNGs into PPM files. (using NETPBM)
  -  Read PPM files
- -  Grayscale read PPMs with average model or luminosity model
+ -  Grayscale read PPMs with average model or luminosity model (See the results at the end)
  -  Turn read PPM files into ASCII art and save as TXT files.
  -  Save read PPMs as PPMs.
  -  Turn PPMs into PNGs. (using NETPBM)
@@ -27,3 +27,30 @@ After this experiment I have written Image_Manipulator, which a much better stru
     - a text file with name ASCII.txt is created and for each pixel's R value a char from the gradient is chosen and pushed to ASCII.txt.
 4. The result after grayscaling is saved as a ppm file and then pnmtopng from NETPBM is called.
 5. Asks if the user wants to start over.
+
+## Results:
+<p align="center" >
+  <img align="center" src="https://github.com/MisterNimbus/Experiments/blob/master/PNG_to_PPM/beans.png?raw=true" width="500" title="input image">
+  <div align="center">
+  ⬆ Input Image
+  </div>
+</p>
+  
+   
+<p align="center" >
+<img align="center" src="https://github.com/MisterNimbus/Experiments/blob/master/PNG_to_PPM/output_average.png?raw=true" width="500" alt="accessibility text">
+<div align="center">
+  ⬆ Average Model Grayscale Image
+  </div>
+</p>
+  
+  
+  
+<p align="center" >
+<img align="center" src="https://github.com/MisterNimbus/Experiments/blob/master/PNG_to_PPM/output_luminosity.png?raw=true" width="500" alt="accessibility text">
+<div align="center">
+  ⬆ Luminosity Model Grayscale Image
+  </div>
+</p>
+
+
