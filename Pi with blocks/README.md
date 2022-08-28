@@ -6,6 +6,12 @@ In my demonstation it can be observed that as the difference between the masses 
 
 I won't be explaining why the digits of pi appear before us because it was explained much better than I can here by 3Blue1Brown in the following videos which also inspired this project alongside The Coding Train who also coded the demonstration of the same concept (once again I coded my version independently from the video):  
 
+<p align="center" >
+<img src="https://github.com/MisterNimbus/Experiments/blob/master/Pi%20with%20blocks/Pi_with_blocks.jpg" width="65%" />
+<div align="center">
+  </div>
+</p>  
+
 ## 3Blue1Brown explaining how:  
 **The most unexpected answer to a counting puzzle**  
 https://www.youtube.com/watch?v=HEfHFsfGXjs  
