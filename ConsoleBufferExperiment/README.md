@@ -12,7 +12,21 @@ Since it was now possible to incorperate colors into my buffers. I started by gi
 
 Now that the flickering was gone I decided I wanted to try making something colourful with all I have learned. So I wrote the rainbow function that output a diagonal rainbow pattern that moved on char left on each frame. Since every block was of another colour, each block had to be changed for each frame which meant it would take plenty of time for the next frame buffer to be ready which dropped the frame rate significantly. (See ```rainbow.gif```)
 
+<p align="center" >
+<img src="https://github.com/MisterNimbus/Experiments/blob/master/ConsoleBufferExperiment/rainbow.gif" width="65%" />
+<div align="center">
+  rainbow.gif
+  </div>
+</p>  
+
 To solve this problem I thought of preparing all frames(Buffers) first and just cycling through them, which worked nicely allowing higher frame rates. (See ```rainbow_premade_frames.gif```) However this method can only be resorted when the frames are known beforehand. It would not be possible to use this method for a game or a live webcam. It would however be possible to use screen buffers just to output strings fast, since it is the number of times console buffer manipulation functions get called that takes time and not the length of the string or area to be manipulated. The rainbow case is the worst example for this instance since the color manipulation function gets called the maximum amount of times(for every char).
+
+<p align="center" >
+<img src="https://github.com/MisterNimbus/Experiments/blob/master/ConsoleBufferExperiment/rainbow_premade_frames.gif" width="65%" />
+<div align="center">
+  rainbow_premade_frames.gif
+  </div>
+</p>  
 
 As next, I am planning to write a program to turn images or even gifs into ASCII Art with color.
 
