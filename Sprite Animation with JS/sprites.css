@@ -1,0 +1,131 @@
+.screen{
+    background: linear-gradient(#888,#555);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    color: #fff;
+    overflow: hidden;
+}
+.center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+.main{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.left{
+    width: 35%;
+}
+
+.right{
+    width: 35%;
+}
+
+.title{
+    font-size: 4em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+.subtitle{
+    font-size: 3em;
+    margin-top: 0em;
+    margin-bottom: 1em;
+}
+p{
+    font-size: 2em;
+    margin-bottom: 2em;
+}
+
+.inputs{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2em;
+}
+
+.row{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+#key-W{
+    font-size: 2em;
+    padding: .5em 1.5em 1.5em .5em;
+    margin: .5em;
+    border: solid #fff 5px;
+    border-radius: 20px;
+}
+
+#key-A{
+    font-size: 2em;
+    padding: .5em 1.75em 1.5em .5em;
+    margin: .5em;
+    border: solid #fff 5px;
+    border-radius: 20px;
+}
+#key-S{
+    font-size: 2em;
+    padding: .5em 1.9em 1.5em .5em;
+    margin: .5em;
+    border: solid #fff 5px;
+    border-radius: 20px;
+}
+#key-D{
+    font-size: 2em;
+    padding: .5em 1.7em 1.5em .5em;
+    margin: .5em;
+    border: solid #fff 5px;
+    border-radius: 20px;
+}
+
+.ghost-key{
+    visibility: hidden;
+    font-size: 2em;
+    padding: .5em 1.5em 1.5em .5em;
+    margin: .5em;
+}
+
+.canvas{
+    border: solid #fff 2px;
+    width: 256px;
+    height: 256px;
+    margin: 2em;
+}
+.right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#frame{
+    margin:0;
+}
+.frame_label{
+    margin-top: 0em;
+}
+
+@media (max-width: 1000px){
+    .main{
+        flex-direction: column;
+        align-items: center;
+    }
+    .left{
+        justify-content: space-evenly;
+        width: 100%;
+        display: flex;
+        font-size: .8em;
+    }
+    .inputs{
+        font-size: .8em;
+    }
+    .title{
+        margin-bottom: .5em;
+    }
+}

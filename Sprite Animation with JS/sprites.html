@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprites</title>
+    <link rel="stylesheet" href="sprites.css">
+</head>
+<body class="screen">
+    <h1 class="title">Sprites</h1>
+    
+        <div class="main">
+            <div class="left">
+                <div class="text">
+                <h3 class="subtitle">Inputs</h3>
+                <p>Active inputs are shown here (W and D are not used)</p>
+                </div>
+                <div class="inputs">
+                    <div class="row">
+                        <div class="ghost-key">W</div>
+                        <div id="key-W">W</div>
+                        <div class="ghost-key">W</div>
+                    </div>
+                    <div class="row">
+                        <div id="key-A">A</div>
+                        <div id="key-S">S</div>
+                        <div id="key-D">D</div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <canvas class="canvas" id="canvas"></canvas>
+                <h5 class="frame_label">FRAME #</h5>
+                <h6 id="frame"></h6>
+            </div>
+    </div>
+    <script src="sprites.js"></script>
+</body>
+</html>
