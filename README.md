@@ -19,3 +19,5 @@ Have Fun!
 - **Console Buffer Experiment:** *Trying Console Buffers to achieve high frame rates and colorful frames.* (C++) - **02.07.2022**
 
 - **PNG_to_PPM:** *Getting familiar with pnm formats and image manipulation.* (C++) - **17.07.2022**
+
+- **Sprite Animation with JS:** *Getting familiar with canvas, sprites and javascript.* (Javascript) - **01.09.2022**
