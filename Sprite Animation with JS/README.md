@@ -7,9 +7,17 @@ Pressed keys are shown on the left (they turn red while pressed).
 <p align="center" >
 <img src="https://github.com/MisterNimbus/Experiments/blob/master/Sprite%20Animation%20with%20JS/Screenshot.jpg" width="65%" />
 <div align="center">
-  ⬆ Screenshot of the site
+  ⬆ Screenshot of sprites.html
   </div>
 </p>  
+
+<p align="center" >
+<img src="https://github.com/MisterNimbus/Experiments/blob/master/Sprite%20Animation%20with%20JS/Screenshot_Running.jpg" width="65%" />
+<div align="center">
+  ⬆ Screenshot of running.html
+  </div>
+</p>  
+  
   
 ## Sprites
 The sprite I have used was also done by me some years ago. It can only start running, run and slide. Should you want to try this yourself here are the loops:  
